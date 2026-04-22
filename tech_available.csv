@@ -1,0 +1,32 @@
+Product ID,Name,Category,Stock,Support Policy
+HW-101,MacBook Pro 14,Laptop,15,Eligible for replacement every 3 years.
+HW-102,Dell XPS 15,Laptop,8,Standard 2-year warranty applies.
+HW-103,Lenovo ThinkPad X1 Carbon,Laptop,12,Eligible for replacement every 3 years.
+HW-104,HP EliteBook 840,Laptop,6,Standard 2-year warranty applies.
+HW-105,Microsoft Surface Pro 9,Laptop,10,Eligible for replacement every 3 years.
+HW-106,MacBook Air M2,Laptop,20,Eligible for replacement every 3 years.
+HW-201,Dell UltraSharp 27 Monitor,Monitor,18,Standard 2-year warranty applies.
+HW-202,LG 32 4K Monitor,Monitor,9,Standard 2-year warranty applies.
+HW-203,BenQ 24 IPS Monitor,Monitor,14,Available upon request via the IT portal.
+HW-301,iPhone 15 Pro,Mobile,5,Eligible for replacement every 2 years. Senior staff only.
+HW-302,Samsung Galaxy S24,Mobile,7,Eligible for replacement every 2 years. Senior staff only.
+HW-303,iPad Pro 12.9,Tablet,8,Requires manager approval.
+HW-401,Cisco IP Phone 8841,Desk Phone,30,Maintenance handled by IT department.
+HW-402,Jabra Evolve2 85 Headset,Accessory,22,Standard 1-year warranty applies.
+HW-403,Logitech MX Master 3 Mouse,Accessory,40,Available upon request via the IT portal.
+HW-404,Logitech MX Keys Keyboard,Accessory,35,Available upon request via the IT portal.
+HW-405,Ergonomic Keyboard,Accessory,25,Available upon request via the IT portal.
+HW-406,Standing Desk Converter,Accessory,10,Requires manager approval.
+HW-407,Webcam Logitech C920,Accessory,28,Available upon request via the IT portal.
+HW-501,WD 2TB External Hard Drive,Storage,15,Replacement provided if faulty within 1 year.
+HW-502,Samsung T7 1TB SSD,Storage,12,Replacement provided if faulty within 1 year.
+SW-501,Adobe Creative Cloud,Software,50,Requires manager approval for license.
+SW-502,Slack Pro,Software,Unlimited,Pre-approved for all departments.
+SW-503,Microsoft 365 Business,Software,Unlimited,Pre-approved for all departments.
+SW-504,Zoom Pro,Software,Unlimited,Pre-approved for all departments.
+SW-505,JetBrains IntelliJ IDEA,Software,20,Available to engineering department only.
+SW-506,GitHub Copilot,Software,15,Requires manager approval. Engineering team priority.
+SW-507,Figma Professional,Software,10,Available to design department only.
+SW-508,Notion Team Plan,Software,Unlimited,Pre-approved for all departments.
+SW-509,1Password Business,Software,Unlimited,Mandatory for all staff. Contact IT to activate.
+SW-510,Tableau Desktop,Software,8,Requires manager approval. Data team priority.
