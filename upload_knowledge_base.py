@@ -11,9 +11,9 @@ import json
 import time
 
 REGION = 'us-east-1'
-S3_BUCKET = 'cs4296a3'
-KB_PREFIX = 'knowledge-base/'
-KNOWLEDGE_BASE_ID = 'FILL_IN_KB_ID'  # Get this from Bedrock > Knowledge Bases console
+S3_BUCKET = 'klaudprojekt'
+KB_PREFIX = ''
+KNOWLEDGE_BASE_ID = 'KSTQ6EAGQZ'
 CSV_PATH = 'tech_available.csv'
 
 s3 = boto3.client('s3', region_name=REGION)
@@ -72,7 +72,7 @@ def sync_knowledge_base():
     print(f"\nStarting ingestion job for KB: {KNOWLEDGE_BASE_ID}...")
     response = bedrock_agent.start_ingestion_job(
         knowledgeBaseId=KNOWLEDGE_BASE_ID,
-        dataSourceId='default'
+        dataSourceId='K9XGUAZ17'
     )
     job_id = response['ingestionJob']['ingestionJobId']
     print(f"Ingestion job started: {job_id}")
