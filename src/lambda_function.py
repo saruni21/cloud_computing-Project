@@ -3,13 +3,14 @@ import boto3
 import re
 import time
 import html
+import uuid
 
 # --- CONFIGURATION ---
 AGENT_ID = 'PKVJXD2MSK'
 AGENT_ALIAS_ID = 'R4XG73VRD8'
 REGION = 'us-east-1'
 MAX_RETRIES = 2
-CONFIDENCE_THRESHOLD = 0.75
+CONFIDENCE_THRESHOLD = 0.35
 
 bedrock_runtime = boto3.client("bedrock-agent-runtime", region_name=REGION)
 
@@ -60,7 +61,7 @@ def get_confidence_score(text, query):
         response = bedrock_runtime.invoke_agent(
             agentId=AGENT_ID,
             agentAliasId=AGENT_ALIAS_ID,
-            sessionId='confidence-check-session',
+            sessionId=f"confidence-{uuid.uuid4().hex}",
             inputText=query
         )
         completion = ""
@@ -97,6 +98,7 @@ def lambda_handler(event, context):
     try:
         body = json.loads(event.get('body', '{}'))
         user_input = body.get('prompt', '')
+        session_id = f"session-{uuid.uuid4().hex}"
 
         # Layer 2 — Input validation
         if input_filter.detect_injection(user_input):
@@ -110,7 +112,7 @@ def lambda_handler(event, context):
         while attempts < MAX_RETRIES:
             response = bedrock_runtime.invoke_agent(
                 agentId=AGENT_ID, agentAliasId=AGENT_ALIAS_ID,
-                sessionId='cloud-warriors-session', inputText=user_input
+                sessionId=session_id, inputText=user_input
             )
             completion = ""
             for event in response.get("completion"):

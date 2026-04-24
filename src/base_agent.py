@@ -54,7 +54,9 @@ TEST_PROMPTS = {
 }
 
 
-def invoke_agent(prompt, session_id='base-agent-session'):
+def invoke_agent(prompt, session_id=None):
+    if session_id is None:
+        session_id = f"base-{int(time.time()*1000)}"
     start = time.time()
     try:
         response = bedrock_runtime.invoke_agent(
