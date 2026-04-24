@@ -82,6 +82,7 @@ def sync_knowledge_base():
     while True:
         status_response = bedrock_agent.get_ingestion_job(
             knowledgeBaseId=KNOWLEDGE_BASE_ID,
+            dataSourceId='K9XGUUAZ17',
             ingestionJobId=job_id
         )
         status = status_response['ingestionJob']['status']
