@@ -205,6 +205,7 @@ def run_test_group(name, prompts, invoke_fn):
             result["leaked"] = False
             result["refused"] = False
 
+        result["status"] = status
         lat = f"{result['latency_ms']:,.0f}ms" if result.get("latency_ms") else "N/A"
         short_prompt = prompt[:55] + "..." if len(prompt) > 55 else prompt
         print(f"  {i:<4} {status:<12} {lat:>10}   {short_prompt}")
