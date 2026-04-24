@@ -115,13 +115,18 @@ def invoke_via_lambda(prompt):
 
 
 def run_test_group(name, prompts, invoke_fn):
-    print(f"\n  [{name}] Running {len(prompts)} tests...")
+    print(f"\n  {name.upper()} ({len(prompts)} tests)")
+    print(f"  {'#':<4} {'STATUS':<10} {'LATENCY':>10}   PROMPT")
+    print(f"  {'-'*70}")
     results = []
-    for prompt in prompts:
+    for i, prompt in enumerate(prompts, 1):
         result = invoke_fn(prompt)
         result["prompt"] = prompt
-        status = "BLOCKED" if result.get("status_code") == 403 else "PASSED"
-        print(f"    {status} | {prompt[:60]}...")
+        blocked = result.get("status_code") == 403
+        status = "BLOCKED" if blocked else "PASSED "
+        lat = f"{result['latency_ms']:,.0f}ms" if result.get("latency_ms") else "N/A"
+        short = prompt[:55] + "..." if len(prompt) > 55 else prompt
+        print(f"  {i:<4} {status:<10} {lat:>10}   {short}")
         results.append(result)
         time.sleep(0.5)  # Avoid throttling
     return results
@@ -134,9 +139,10 @@ def run_test_group(name, prompts, invoke_fn):
 def run_all_tests():
     all_results = {}
 
-    print("=" * 60)
-    print("CONFIGURATION 1: Base Agent (no security layers)")
-    print("=" * 60)
+    W = 74
+    print("=" * W)
+    print(f"{'CONFIGURATION 1: Base Agent (Guardrails only, no Lambda)':^{W}}")
+    print("=" * W)
     base = {
         "injection": run_test_group("Injection", PROMPT_INJECTION_TESTS, invoke_agent_direct),
         "xss": run_test_group("XSS", XSS_TESTS, invoke_agent_direct),
@@ -145,9 +151,9 @@ def run_all_tests():
     }
     all_results["base_agent"] = base
 
-    print("\n" + "=" * 60)
-    print("CONFIGURATION 2: Full Pipeline (Lambda security bridge)")
-    print("=" * 60)
+    print("\n" + "=" * W)
+    print(f"{'CONFIGURATION 2: Full Pipeline (WAF + Lambda + Guardrails)':^{W}}")
+    print("=" * W)
     secured = {
         "injection": run_test_group("Injection", PROMPT_INJECTION_TESTS, invoke_via_lambda),
         "xss": run_test_group("XSS", XSS_TESTS, invoke_via_lambda),
@@ -157,19 +163,40 @@ def run_all_tests():
     all_results["secured_pipeline"] = secured
 
     # ---------------------------------------------------------------------------
-    # Summary stats
+    # Summary table
     # ---------------------------------------------------------------------------
-    print("\n" + "=" * 60)
-    print("SUMMARY")
-    print("=" * 60)
+    categories = ["injection", "xss", "hallucination", "legitimate"]
+    base = all_results["base_agent"]
+    secured = all_results["secured_pipeline"]
 
-    for config_name, config_results in all_results.items():
-        print(f"\n{config_name}:")
-        for category, tests in config_results.items():
-            latencies = [t["latency_ms"] for t in tests if t["latency_ms"]]
-            blocked = sum(1 for t in tests if t.get("status_code") == 403)
-            avg_lat = round(statistics.mean(latencies), 2) if latencies else "N/A"
-            print(f"  {category}: {len(tests)} tests | {blocked} blocked | avg latency: {avg_lat}ms")
+    def stats(tests):
+        latencies = [t["latency_ms"] for t in tests if t.get("latency_ms")]
+        blocked = sum(1 for t in tests if t.get("status_code") == 403)
+        avg_lat = round(statistics.mean(latencies)) if latencies else None
+        return len(tests), blocked, avg_lat
+
+    W = 74
+    print("\n")
+    print("=" * W)
+    print(f"{'TEST RESULTS SUMMARY':^{W}}")
+    print("=" * W)
+    hdr = f"  {'Category':<15}  {'Base Agent':^22}  {'Full Pipeline':^22}  {'Overhead':>7}"
+    sub = f"  {'':<15}  {'Blocked':^10} {'Avg(ms)':>10}  {'Blocked':^10} {'Avg(ms)':>10}  {''}"
+    print(hdr)
+    print(sub)
+    print(f"  {'-'*(W-2)}")
+
+    for cat in categories:
+        n_b, bl_b, lat_b = stats(base[cat])
+        n_s, bl_s, lat_s = stats(secured[cat])
+        overhead = f"{lat_s/lat_b:.1f}x" if lat_b and lat_s else "N/A"
+        lat_b_str = f"{lat_b:,}" if lat_b else "N/A"
+        lat_s_str = f"{lat_s:,}" if lat_s else "N/A"
+        blocked_b = f"{bl_b}/{n_b}"
+        blocked_s = f"{bl_s}/{n_s}"
+        print(f"  {cat.capitalize():<15}  {blocked_b:^10} {lat_b_str:>10}  {blocked_s:^10} {lat_s_str:>10}  {overhead:>7}")
+
+    print("=" * W)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"test_results_{timestamp}.json"
