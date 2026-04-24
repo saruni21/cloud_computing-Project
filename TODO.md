@@ -29,7 +29,7 @@
 ---
 
 ### Phase 4: Empirical Evaluation & Research
-* [x] **Establish Baseline**: Run tests using base_agent.py — Bedrock direct calls without Lambda security layers.
+* [x] **Establish Baseline**: Run tests using src/base_agent.py — Bedrock direct calls without Lambda security layers.
 * [x] **Systematic Parameter Variation**: 
     * [x] Tested base agent (Guardrails only) vs full pipeline (WAF + Lambda + Guardrails).
     * [x] Extended injection test suite with multilingual/indirect attacks (French translation, JSON audit framing, multi-step translation).
@@ -42,6 +42,6 @@
 ---
 
 ### Phase 5: Final Documentation
-* [x] **Compile Results**: test_results_20260424_080509.json — full comparison of base agent vs secured pipeline.
-* [x] **Final Report**: report_draft.md — complete academic paper with abstract, background, architecture, results, discussion, references.
-* [ ] **Video making**: Upload video explaining our project. (Script ready in video_script.md)
+* [x] **Compile Results**: results/test_results_20260424_080509.json — full comparison of base agent vs secured pipeline.
+* [x] **Final Report**: docs/report_draft.md — complete academic paper with abstract, background, architecture, results, discussion, references.
+* [ ] **Video making**: Upload video explaining our project. (Script ready in docs/video_script.md)

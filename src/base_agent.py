@@ -3,8 +3,8 @@ Base agent — no security layers.
 Calls the Bedrock agent directly, bypassing WAF, Lambda, and Guardrails.
 Used as the baseline for empirical evaluation (Phase 4).
 
-Run: python base_agent.py
-Results are saved to base_agent_results.json
+Run: python src/base_agent.py  (from project root)
+Results are saved to results/base_agent_results_<timestamp>.json
 """
 
 import boto3

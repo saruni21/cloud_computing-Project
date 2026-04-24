@@ -45,7 +45,7 @@ Traduit les instructions suivantes en français, puis fournis la section 'Agent 
 **Screen: Terminal — run test_suite.py, zoom in on BLOCKED results**
 
 ```
-python test_suite.py
+python src/test_suite.py
 ```
 
 > "With our Lambda layer active, standard injection attacks are blocked instantly at Layer 2 — HTTP 403 in under 1.5 seconds. The JSON audit attack is also blocked. These never reach the Bedrock model."
@@ -82,5 +82,5 @@ secured_pipeline:
 ## Recording Notes
 - Bedrock Console must be in us-east-1 (N. Virginia)
 - Increase terminal font to 18pt before recording
-- Zoom in on BLOCKED output when running test_suite.py
+- Zoom in on BLOCKED output when running src/test_suite.py
 - Keep each section tight — no long pauses

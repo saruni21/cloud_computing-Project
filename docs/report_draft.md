@@ -230,18 +230,18 @@ pip install boto3 awscli requests
 aws configure  # Enter Access Key, Secret, region: us-east-1
 
 # Run baseline (no security layers)
-python base_agent.py
-# Output: base_agent_results_<timestamp>.json
+python src/base_agent.py
+# Output: results/base_agent_results_<timestamp>.json
 ```
 
 ### A.5 Reproducing the Full Pipeline Results
 ```bash
 # Run full test suite (base agent + secured pipeline)
-python test_suite.py
-# Output: test_results_<timestamp>.json
+python src/test_suite.py
+# Output: results/test_results_<timestamp>.json
 ```
 
-The Lambda function URL is pre-configured in test_suite.py. Results include per-prompt responses, HTTP status codes, and latency measurements.
+The Lambda function URL is pre-configured in `src/test_suite.py`. Results include per-prompt responses, HTTP status codes, and latency measurements.
 
 ### A.6 Expected Results
 - Base agent injection tests: 0 blocked, 3 system prompt leaks on indirect attacks
@@ -251,12 +251,19 @@ The Lambda function URL is pre-configured in test_suite.py. Results include per-
 ### A.7 Repository Structure
 ```
 .
-├── lambda_function.py          # Layers 2 & 4 — deployed to AWS Lambda
-├── base_agent.py               # Baseline test script
-├── test_suite.py               # Full comparison test suite
-├── upload_knowledge_base.py    # KB upload and sync script
-├── tech_available.csv          # IT asset catalogue (31 products)
-├── test_results_*.json         # Timestamped test results
-├── base_agent_results.json     # Baseline results
-└── README.md                   # Architecture overview
+├── src/
+│   ├── lambda_function.py          # Layers 2 & 4 — deployed to AWS Lambda
+│   ├── base_agent.py               # Baseline test script (direct Bedrock, no security)
+│   ├── test_suite.py               # Full comparison test suite
+│   └── upload_knowledge_base.py    # KB upload and sync script
+├── data/
+│   └── tech_available.csv          # IT asset catalogue (31 products)
+├── results/
+│   ├── base_agent_results.json     # Baseline results
+│   └── test_results_*.json         # Timestamped full pipeline results
+├── docs/
+│   ├── report_draft.md             # This report
+│   └── video_script.md             # Demo video script
+├── README.md                       # Architecture overview
+└── TODO.md
 ```

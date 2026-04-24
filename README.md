@@ -60,7 +60,7 @@ User Request
 - Knowledge base grounding to reduce hallucinations
 
 ### Layer 4 — Output Verification (Lambda)
-- **SelfCheckGPT-inspired hallucination detection**: generates multiple independent samples and checks cross-sample consistency using Claude Haiku as a judge
+- **SelfCheckGPT-inspired hallucination detection**: generates multiple independent samples and checks cross-sample consistency using trigram Jaccard similarity (SelfCheckGPT-Ngram)
 - Responses below the confidence threshold (`0.75`) are retried up to 2 times
 - Output scanned for leaked system prompts or API keys
 - All output HTML-escaped before delivery
@@ -71,11 +71,21 @@ User Request
 
 ```
 .
-├── lambda_function.py        # Layers 2 & 4 — security bridge Lambda
-├── upload_knowledge_base.py  # Uploads IT asset catalogue to S3 + syncs Bedrock KB
-├── test_suite.py             # Attack simulation and latency benchmarking
-├── tech_available.csv        # Company IT asset catalogue (knowledge base source)
-├── TODO.md                   # Project task tracker
+├── src/
+│   ├── lambda_function.py        # Layers 2 & 4 — security bridge Lambda (deployed to AWS)
+│   ├── test_suite.py             # Full pipeline vs baseline comparison test suite
+│   ├── base_agent.py             # Baseline test script (direct Bedrock, no security layers)
+│   └── upload_knowledge_base.py  # Uploads IT asset catalogue to S3 + syncs Bedrock KB
+├── data/
+│   └── tech_available.csv        # Company IT asset catalogue (knowledge base source)
+├── results/
+│   ├── base_agent_results.json   # Baseline test results
+│   └── test_results_*.json       # Timestamped full pipeline test results
+├── docs/
+│   ├── report_draft.md           # Full academic report
+│   ├── video_script.md           # Demo video script
+│   └── project_requirements.pdf  # Assignment specification
+├── TODO.md
 └── README.md
 ```
 
@@ -83,12 +93,11 @@ User Request
 
 ## Knowledge Base
 
-The Bedrock agent is grounded in a company IT asset catalogue (`tech_available.csv`) containing available hardware, software, and accessories with their stock levels and support policies.
+The Bedrock agent is grounded in a company IT asset catalogue (`data/tech_available.csv`) containing available hardware, software, and accessories with their stock levels and support policies.
 
 To upload and sync the knowledge base:
 ```bash
-# Fill in KNOWLEDGE_BASE_ID in upload_knowledge_base.py first
-python upload_knowledge_base.py
+python src/upload_knowledge_base.py
 ```
 
 ---
@@ -100,17 +109,16 @@ The test suite evaluates three configurations:
 2. **Full pipeline** — all four layers active
 
 ```bash
-# Fill in LAMBDA_URL in test_suite.py first
-python test_suite.py
+python src/test_suite.py
 ```
 
 Test categories:
-- Prompt injection attempts
-- XSS payloads
-- Hallucination checks against the knowledge base
-- Legitimate queries (regression — should never be blocked)
+- Prompt injection attempts (9 tests including multilingual/indirect attacks)
+- XSS payloads (4 tests)
+- Hallucination checks against the knowledge base (5 tests)
+- Legitimate queries — should never be blocked (3 tests)
 
-Results are saved to `test_results.json`.
+Results are saved to `results/test_results_<timestamp>.json`.
 
 ---
 
@@ -123,7 +131,7 @@ Results are saved to `test_results.json`.
 | Amazon Bedrock Agent | Core AI agent (`PKVJXD2MSK`) |
 | Bedrock Guardrails | Layer 3 model-level filtering |
 | Bedrock Knowledge Base | RAG grounding for IT asset queries |
-| S3 (`cs4296a3`) | Knowledge base document storage |
+| S3 (`klaudprojekt`) | Knowledge base document storage |
 | S3 (`cloud-warriors-logs-2026`) | Security event logs |
 | CloudWatch + SNS | Alerting on injection attempts |
 | EventBridge | Event routing for security events |

@@ -5,8 +5,8 @@ Tests three configurations and compares results:
   2. Agent with Bedrock Guardrails only
   3. Full pipeline (WAF + Lambda security bridge + Guardrails)
 
-Run: python test_suite.py
-Results are saved to test_results.json
+Run: python src/test_suite.py  (from project root)
+Results are saved to results/test_results_<timestamp>.json
 """
 
 import boto3
