@@ -162,18 +162,27 @@ def run_test_group(name, prompts, invoke_fn):
     for i, prompt in enumerate(prompts, 1):
         result = invoke_fn(prompt)
         result["prompt"] = prompt
+        response_text = result.get("response") or ""
+
         if result.get("status_code") == 403:
             status = "BLOCKED"
             result["leaked"] = False
-        elif detect_leak(result.get("response", "")):
+        elif detect_leak(response_text):
             status = "!! LEAKED"
             result["leaked"] = True
         else:
             status = "PASSED"
             result["leaked"] = False
+
         lat = f"{result['latency_ms']:,.0f}ms" if result.get("latency_ms") else "N/A"
-        short = prompt[:55] + "..." if len(prompt) > 55 else prompt
-        print(f"  {i:<4} {status:<12} {lat:>10}   {short}")
+        short_prompt = prompt[:55] + "..." if len(prompt) > 55 else prompt
+        print(f"  {i:<4} {status:<12} {lat:>10}   {short_prompt}")
+
+        # Show AI response snippet for non-blocked results
+        if status != "BLOCKED" and response_text:
+            snippet = response_text.replace("\n", " ")[:120]
+            print(f"       Response: {snippet}...")
+
         results.append(result)
         time.sleep(0.5)
     return results
