@@ -73,7 +73,7 @@ def sync_knowledge_base():
     print(f"\nStarting ingestion job for KB: {KNOWLEDGE_BASE_ID}...")
     response = bedrock_agent.start_ingestion_job(
         knowledgeBaseId=KNOWLEDGE_BASE_ID,
-        dataSourceId='K9XGUAZ17'
+        dataSourceId='K9XGUUAZ17'
     )
     job_id = response['ingestionJob']['ingestionJobId']
     print(f"Ingestion job started: {job_id}")
