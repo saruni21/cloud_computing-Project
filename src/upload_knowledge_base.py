@@ -5,6 +5,7 @@ and triggers a Bedrock Knowledge Base sync.
 Fill in KNOWLEDGE_BASE_ID before running.
 """
 
+import os
 import boto3
 import csv
 import json
@@ -14,7 +15,7 @@ REGION = 'us-east-1'
 S3_BUCKET = 'klaudprojekt'
 KB_PREFIX = ''
 KNOWLEDGE_BASE_ID = 'KSTQ6EAGQZ'
-CSV_PATH = 'tech_available.csv'
+CSV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'tech_available.csv')
 
 s3 = boto3.client('s3', region_name=REGION)
 bedrock_agent = boto3.client('bedrock-agent', region_name=REGION)
