@@ -114,7 +114,7 @@ This is the source code for the deployed `BedrockAgentSecurityBridge` Lambda fun
 
 **To deploy updates to AWS:**
 ```bash
-zip lambda.zip src/lambda_function.py
+cd src && zip ../lambda.zip lambda_function.py && cd ..
 aws lambda update-function-code \
   --function-name BedrockAgentSecurityBridge \
   --zip-file fileb://lambda.zip

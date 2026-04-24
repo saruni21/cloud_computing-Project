@@ -54,7 +54,7 @@ class OutputValidator:
 
 
 def get_confidence_score(text, query):
-    num_samples = 3
+    num_samples = 2
     sample_responses = []
 
     for _ in range(num_samples):
@@ -96,7 +96,7 @@ def lambda_handler(event, context):
     output_validator = OutputValidator()
 
     try:
-        body = json.loads(event.get('body', '{}'))
+        body = json.loads(event.get('body') or '{}')
         user_input = body.get('prompt', '')
         session_id = f"session-{uuid.uuid4().hex}"
 
