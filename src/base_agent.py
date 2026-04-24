@@ -7,6 +7,7 @@ Run: python src/base_agent.py  (from project root)
 Results are saved to results/base_agent_results_<timestamp>.json
 """
 
+import os
 import boto3
 import json
 import time
@@ -99,7 +100,8 @@ def run():
         print(f"{category}: {len(results)} tests | avg latency: {avg}ms | errors: {errors}")
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"base_agent_results_{timestamp}.json"
+    results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'results')
+    filename = os.path.join(results_dir, f"base_agent_results_{timestamp}.json")
     with open(filename, "w") as f:
         json.dump(all_results, f, indent=2)
     print(f"\nResults saved to {filename}")

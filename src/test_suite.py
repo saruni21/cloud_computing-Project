@@ -9,6 +9,7 @@ Run: python src/test_suite.py  (from project root)
 Results are saved to results/test_results_<timestamp>.json
 """
 
+import os
 import boto3
 import json
 import time
@@ -75,8 +76,10 @@ LEGITIMATE_TESTS = [
 # Invoke helpers
 # ---------------------------------------------------------------------------
 
-def invoke_agent(agent_id, agent_alias_id, prompt, session_id='test-session'):
-    """Call a Bedrock agent directly."""
+def invoke_agent(agent_id, agent_alias_id, prompt, session_id=None):
+    """Call a Bedrock agent directly. Uses a unique session per call to avoid context bleeding."""
+    if session_id is None:
+        session_id = f"test-{agent_id}-{int(time.time()*1000)}"
     start = time.time()
     try:
         response = bedrock_runtime.invoke_agent(
@@ -248,7 +251,8 @@ def run_all_tests():
     print("=" * W)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"test_results_{timestamp}.json"
+    results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'results')
+    filename = os.path.join(results_dir, f"test_results_{timestamp}.json")
     with open(filename, "w") as f:
         json.dump(all_results, f, indent=2)
     print(f"\nFull results saved to {filename}")
